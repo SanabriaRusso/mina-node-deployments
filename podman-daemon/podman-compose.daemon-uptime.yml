@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  mina-daemon:
+    volumes:
+      - ${UPTIME_SUBMITTER_KEY_PATH:-./shared/uptime-submitter-key}:/keys/uptime-submitter-key:ro
+    environment:
+      - UPTIME_URL=${UPTIME_URL:-}
+    entrypoint:
+      - /usr/bin/env
+      - bash
+      - -c
+      - |
+        mina daemon --peer ${PEER} \
+                    --uptime-url ${UPTIME_URL} \
+                    --uptime-submitter-key /keys/uptime-submitter-key

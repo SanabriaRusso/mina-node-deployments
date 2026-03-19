@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  mina-daemon:
+    image: ${MINA_IMAGE}
+    platform: linux/arm64
+    container_name: mina-daemon
+    volumes:
+      - ~/github/mina:/app/:ro
+      - ./output:/output:rw
+      - ./shared:/shared:rw
+    ports:
+      - "3085:3085"
+    environment:
+      - RUNTIME_CONFIG=${RUNTIME_CONFIG:-}
+      - PEER=${PEER}
+      - PEER_LIST_URL=${PEER_LIST_URL:-}
+      - NODE_STATUS_URL=${NODE_STATUS_URL:-}
+      - NODE_ERROR_URL=${NODE_ERROR_URL:-}
+    deploy:
+      resources:
+        limits:
+          memory: "12G"
+          cpus: "6.00"
+        reservations:
+          memory: "12G"
+          cpus: "6.00"
+
+volumes:
+  elasticsearch-data:

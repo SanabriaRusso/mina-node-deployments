@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  mina-daemon:
+    entrypoint:
+      - /usr/bin/env
+      - bash
+      - -c
+      - |
+        mina daemon --peer ${PEER}

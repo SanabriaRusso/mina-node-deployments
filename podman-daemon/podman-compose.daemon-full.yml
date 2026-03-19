@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  mina-daemon:
+    volumes:
+      - ./mina-mesa-config:/root/.mina-config:rw
+    entrypoint:
+      - /usr/bin/env
+      - bash
+      - -c
+      - |
+        rm -rf /var/lib/coda/* && \
+        mina daemon --config-file /shared/${RUNTIME_CONFIG} \
+                    --simplified-node-stats false \
+                    --node-status-url ${NODE_STATUS_URL} \
+                    --node-error-url ${NODE_ERROR_URL} \
+                    --peer-list-url ${PEER_LIST_URL}
