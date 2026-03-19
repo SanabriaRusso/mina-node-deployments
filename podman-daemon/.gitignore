@@ -1,2 +1,3 @@
 mina-mesa-config
-*.ignore
+shared/*
+!shared/mina_mesa_big_runtime_config.json
