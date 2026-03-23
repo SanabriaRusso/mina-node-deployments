@@ -1,0 +1,70 @@
+.DEFAULT_GOAL := help
+SHELL := /bin/bash
+.PHONY: help
+
+# ── Network Registry ─────────────────────────────────────────────
+# To add a network: add its name to NETWORKS and define OVERLAY_<name>.
+# The env file is auto-derived as env/<name>.env.
+
+NETWORKS := mesa pre-mesa devnet mainnet mainnet-uptime
+
+OVERLAY_mesa           := daemon-full
+OVERLAY_pre-mesa       := daemon-full
+OVERLAY_devnet         := daemon
+OVERLAY_mainnet        := daemon
+OVERLAY_mainnet-uptime := daemon-uptime
+
+# ── Compose Command Builder ─────────────────────────────────────
+BASE_FILE := podman-compose.yml
+COMPOSE   := podman-compose
+
+compose-cmd = $(COMPOSE) -f $(BASE_FILE) -f podman-compose.$(OVERLAY_$(1)).yml --env-file env/$(1).env
+
+# ── Target Generator ────────────────────────────────────────────
+define NETWORK_TARGETS
+
+.PHONY: up-$(1) down-$(1) logs-$(1) config-$(1) restart-$(1) ps-$(1)
+
+up-$(1):
+	$(call compose-cmd,$(1)) up -d
+
+down-$(1):
+	$(call compose-cmd,$(1)) down
+
+logs-$(1):
+	$(call compose-cmd,$(1)) logs -f
+
+config-$(1):
+	$(call compose-cmd,$(1)) config
+
+restart-$(1):
+	$(call compose-cmd,$(1)) restart
+
+ps-$(1):
+	$(call compose-cmd,$(1)) ps
+
+endef
+
+$(foreach net,$(NETWORKS),$(eval $(call NETWORK_TARGETS,$(net))))
+
+# ── Help ─────────────────────────────────────────────────────────
+help:
+	@echo "Mina Node Deployment - podman-compose runner"
+	@echo ""
+	@echo "Available networks: $(NETWORKS)"
+	@echo ""
+	@echo "Commands:"
+	@echo "  make up-<network>       Start daemon (detached)"
+	@echo "  make down-<network>     Stop and remove daemon"
+	@echo "  make logs-<network>     Tail daemon logs"
+	@echo "  make config-<network>   Print resolved compose config"
+	@echo "  make restart-<network>  Restart daemon"
+	@echo "  make ps-<network>       Show running containers"
+	@echo ""
+	@echo "Examples:"
+	@echo "  make up-mesa            Start mesa daemon"
+	@echo "  make config-devnet      Preview resolved devnet config"
+	@echo "  make logs-mainnet       Follow mainnet logs"
+	@echo ""
+	@echo "Network -> Overlay mapping:"
+	@$(foreach net,$(NETWORKS),echo "  $(net) -> podman-compose.$(OVERLAY_$(net)).yml";)

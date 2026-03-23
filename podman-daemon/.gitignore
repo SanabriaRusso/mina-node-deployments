@@ -1,3 +1,7 @@
 mina-mesa-config
+mina-devnet-config
+mina-mainnet-config
+mina-pre-mesa-1-config
 shared/*
 !shared/mina_mesa_big_runtime_config.json
+!shared/mina_pre_mesa_1_config.json

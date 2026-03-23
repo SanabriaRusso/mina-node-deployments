@@ -24,6 +24,4 @@ services:
         reservations:
           memory: "12G"
           cpus: "6.00"
-
 volumes:
-  elasticsearch-data:

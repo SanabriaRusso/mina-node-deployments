@@ -2,7 +2,7 @@ version: '3.8'
 services:
   mina-daemon:
     volumes:
-      - ./mina-mesa-config:/root/.mina-config:rw
+      - ${MINA_CONFIG_DIR:-./mina-config}:/root/.mina-config:rw
     entrypoint:
       - /usr/bin/env
       - bash
