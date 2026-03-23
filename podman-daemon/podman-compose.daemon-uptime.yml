@@ -3,6 +3,7 @@ services:
   mina-daemon:
     volumes:
       - ${UPTIME_SUBMITTER_KEY_PATH:-./shared/uptime-submitter-key}:/keys/uptime-submitter-key:ro
+      - ${MINA_CONFIG_DIR:-./mina-config}:/root/.mina-config:rw
     environment:
       - UPTIME_URL=${UPTIME_URL:-}
     entrypoint:
