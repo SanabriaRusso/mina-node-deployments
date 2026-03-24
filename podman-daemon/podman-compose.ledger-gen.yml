@@ -6,11 +6,12 @@ services:
       - bash
       - -c
       - |
-        /app/scripts/generate-ledger-hf-dryrun.sh -p 2 \
-                                                  -k 6 \
-                                                  -e 2 \
+        /app/scripts/generate-ledger-hf-dryrun.sh -p 20 \
+                                                  -k 30 \
+                                                  -e 5 \
                                                   -b 7000000 \
                                                   --mina-binary $(which mina) \
                                                   --runtime-genesis-ledger-binary $(which mina-create-genesis) \
                                                   --output-dir /output \
+                                                  --pad-app-state \
                                                   --prefix ${LEDGER_PREFIX:-new-devnet}

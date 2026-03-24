@@ -47,6 +47,30 @@ endef
 
 $(foreach net,$(NETWORKS),$(eval $(call NETWORK_TARGETS,$(net))))
 
+# ── Ledger Generation ───────────────────────────────────────────
+# Runs in foreground (no -d) since it's a one-shot job.
+# Override LEDGER_NETWORK to use a different env file.
+# Override LEDGER_PREFIX to change the output filename prefix.
+
+LEDGER_NETWORK := devnet
+LEDGER_PREFIX  ?= new-devnet
+# Genesis timestamp: next full hour from now (macOS-compatible date)
+GENESIS_TIMESTAMP ?= $(shell date -u -v+1H '+%Y-%m-%dT%H:00:00Z')
+export LEDGER_PREFIX GENESIS_TIMESTAMP
+
+ledger-gen-cmd = $(COMPOSE) -f $(BASE_FILE) -f podman-compose.ledger-gen.yml --env-file env/$(LEDGER_NETWORK).env
+
+.PHONY: ledger-gen ledger-gen-config ledger-gen-down
+
+ledger-gen:
+	$(call ledger-gen-cmd) up
+
+ledger-gen-config:
+	$(call ledger-gen-cmd) config
+
+ledger-gen-down:
+	$(call ledger-gen-cmd) down
+
 # ── Help ─────────────────────────────────────────────────────────
 help:
 	@echo "Mina Node Deployment - podman-compose runner"
@@ -61,10 +85,18 @@ help:
 	@echo "  make restart-<network>  Restart daemon"
 	@echo "  make ps-<network>       Show running containers"
 	@echo ""
+	@echo "Ledger generation:"
+	@echo "  make ledger-gen                       Generate genesis ledger (foreground)"
+	@echo "  make ledger-gen LEDGER_PREFIX=mynet    Override output prefix"
+	@echo "  make ledger-gen LEDGER_NETWORK=mesa    Use a different network env"
+	@echo "  make ledger-gen-config                 Preview resolved ledger-gen config"
+	@echo "  make ledger-gen-down                   Clean up ledger-gen container"
+	@echo ""
 	@echo "Examples:"
 	@echo "  make up-mesa            Start mesa daemon"
 	@echo "  make config-devnet      Preview resolved devnet config"
 	@echo "  make logs-mainnet       Follow mainnet logs"
+	@echo "  make ledger-gen         Generate ledger with devnet env"
 	@echo ""
 	@echo "Network -> Overlay mapping:"
 	@$(foreach net,$(NETWORKS),echo "  $(net) -> podman-compose.$(OVERLAY_$(net)).yml";)
