@@ -1,11 +1,16 @@
 version: '3.8'
 services:
   mina-daemon:
+    volumes:
+      - ~/github/mina:/app/:rw
+    environment:
+      - GENESIS_TIMESTAMP=${GENESIS_TIMESTAMP}
     entrypoint:
       - /usr/bin/env
       - bash
       - -c
       - |
+        sed -i 's/DEFAULT_GENESIS_TIMESTAMP=.*/DEFAULT_GENESIS_TIMESTAMP="${GENESIS_TIMESTAMP:-2026-01-01T00:00:00Z}"/' /app/scripts/generate-ledger-hf-dryrun.sh
         /app/scripts/generate-ledger-hf-dryrun.sh -p 20 \
                                                   -k 30 \
                                                   -e 5 \
@@ -14,4 +19,5 @@ services:
                                                   --runtime-genesis-ledger-binary $(which mina-create-genesis) \
                                                   --output-dir /output \
                                                   --pad-app-state \
+                                                  --timestamp ${GENESIS_TIMESTAMP} \
                                                   --prefix ${LEDGER_PREFIX:-new-devnet}
