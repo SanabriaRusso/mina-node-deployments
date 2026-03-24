@@ -130,25 +130,34 @@ The remaining flags (`--mina-binary`, `--runtime-genesis-ledger-binary`, `--outp
 Generated files are written to `./output/` on the host. Expect:
 
 - **BP keypairs:** `<prefix>-bp1` through `<prefix>-bp20` (private keys) and corresponding `.pub` files
-- **Plain keypairs:** `<prefix>-key1` through `<prefix>-key30` and `.pub` files
+- **Plain keypairs:** `<prefix>-plain1` through `<prefix>-plain30` and `.pub` files
 - **Runtime config:** Updated genesis ledger config with all BP public keys inserted
 
 ### Post-Generation: Preparing Keys
 
-Two utility scripts help convert raw keypairs into the JSON format needed by the Mina daemon:
+After ledger generation, batch-process all key pairs into daemon-ready JSON:
 
-**1. Combine private + public key into a single JSON file:**
+```bash
+make combine-keys
+```
+
+This finds all `.pub` files in `output/`, pairs each with its private key, and produces combined+escaped JSON files in `output/combined_keys/`:
+
+```
+output/combined_keys/
+├── bp1.json ... bp20.json
+└── plain1.json ... plain30.json
+```
+
+Each file contains: `{"key": "<escaped_private_key>", "pub": "<public_key>"}`
+
+The script is idempotent — re-running cleans and regenerates all combined keys.
+
+**Manual single-key processing** (if needed):
 
 ```bash
 ./combine-keys.sh output/<prefix>-bp1 output/<prefix>-bp1.pub output/bp1.json
-```
-
-This produces: `{"key": <private_key>, "pub": "<public_key>"}`
-
-**2. Escape the JSON key field for daemon compatibility:**
-
-```bash
-python escape_json_key.py output/bp1.json -o output/bp1-escaped.json
+python3 escape_json_key.py output/bp1.json
 ```
 
 ### Tuning for Your Testnet

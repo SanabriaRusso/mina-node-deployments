@@ -53,14 +53,13 @@ $(foreach net,$(NETWORKS),$(eval $(call NETWORK_TARGETS,$(net))))
 # Override LEDGER_PREFIX to change the output filename prefix.
 
 LEDGER_NETWORK := devnet
-LEDGER_PREFIX  ?= new-devnet
 # Genesis timestamp: next full hour from now (macOS-compatible date)
 GENESIS_TIMESTAMP ?= $(shell date -u -v+1H '+%Y-%m-%dT%H:00:00Z')
-export LEDGER_PREFIX GENESIS_TIMESTAMP
+export GENESIS_TIMESTAMP
 
 ledger-gen-cmd = $(COMPOSE) -f $(BASE_FILE) -f podman-compose.ledger-gen.yml --env-file env/$(LEDGER_NETWORK).env
 
-.PHONY: ledger-gen ledger-gen-config ledger-gen-down
+.PHONY: ledger-gen ledger-gen-config ledger-gen-down combine-keys
 
 ledger-gen:
 	$(call ledger-gen-cmd) up
@@ -70,6 +69,9 @@ ledger-gen-config:
 
 ledger-gen-down:
 	$(call ledger-gen-cmd) down
+
+combine-keys:
+	./process-keys.sh output
 
 # ── Help ─────────────────────────────────────────────────────────
 help:
@@ -91,6 +93,7 @@ help:
 	@echo "  make ledger-gen LEDGER_NETWORK=mesa    Use a different network env"
 	@echo "  make ledger-gen-config                 Preview resolved ledger-gen config"
 	@echo "  make ledger-gen-down                   Clean up ledger-gen container"
+	@echo "  make combine-keys                     Combine and escape all key pairs"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make up-mesa            Start mesa daemon"
