@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  mina-daemon:
+    volumes:
+      - ${MINA_CONFIG_DIR:-./mina-config}:/root/.mina-config:rw
+    entrypoint:
+      - /usr/bin/env
+      - bash
+      - -c
+      - |
+        mina daemon --peer-list-url ${PEER_LIST_URL} --hardfork-handling migrate-exit

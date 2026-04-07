@@ -6,10 +6,11 @@ SHELL := /bin/bash
 # To add a network: add its name to NETWORKS and define OVERLAY_<name>.
 # The env file is auto-derived as env/<name>.env.
 
-NETWORKS := mesa pre-mesa devnet mainnet mainnet-uptime
+NETWORKS := mesa pre-mesa pre-mesa-auto devnet mainnet mainnet-uptime
 
 OVERLAY_mesa           := daemon-full
 OVERLAY_pre-mesa       := daemon-full
+OVERLAY_pre-mesa-auto  := daemon-auto
 OVERLAY_devnet         := daemon
 OVERLAY_mainnet        := daemon
 OVERLAY_mainnet-uptime := daemon-uptime
