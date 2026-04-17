@@ -11,7 +11,7 @@ NETWORKS := mesa pre-mesa pre-mesa-auto devnet mainnet mainnet-uptime
 OVERLAY_mesa           := daemon-full
 OVERLAY_pre-mesa       := daemon-full
 OVERLAY_pre-mesa-auto  := daemon-auto
-OVERLAY_devnet         := daemon
+OVERLAY_devnet         := daemon-full-embedded
 OVERLAY_mainnet        := daemon
 OVERLAY_mainnet-uptime := daemon-uptime
 
