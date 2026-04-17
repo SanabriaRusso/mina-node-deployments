@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  mina-daemon:
+    volumes:
+      - ${MINA_CONFIG_DIR:-./mina-config}:/root/.mina-config:rw
+    entrypoint:
+      - /usr/bin/env
+      - bash
+      - -c
+      - |
+        mina daemon --simplified-node-stats false \
+                    --node-status-url ${NODE_STATUS_URL} \
+                    --node-error-url ${NODE_ERROR_URL} \
+                    --peer-list-url ${PEER_LIST_URL}
