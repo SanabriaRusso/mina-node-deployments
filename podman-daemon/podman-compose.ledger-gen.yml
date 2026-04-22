@@ -10,12 +10,12 @@ services:
       - bash
       - -c
       - |
-        sed -i 's/DEFAULT_GENESIS_TIMESTAMP=.*/DEFAULT_GENESIS_TIMESTAMP="${GENESIS_TIMESTAMP:-2026-01-01T00:00:00Z}"/' /app/scripts/generate-ledger-hf-dryrun.sh
         chmod +x /app/scripts/generate-ledger-hf-dryrun.sh
-        /app/scripts/generate-ledger-hf-dryrun.sh -p 20 \
-                                                  -k 30 \
-                                                  -e 5 \
-                                                  -b 7000000 \
+        /app/scripts/generate-ledger-hf-dryrun.sh -p 30 \
+                                                  -k 20 \
+                                                  -e 0 \
+                                                  -b 10000 \
+                                                  --plain-balance 10000 \
                                                   --mina-binary $(which mina) \
                                                   --runtime-genesis-ledger-binary $(which mina-create-genesis) \
                                                   --output-dir /output \
