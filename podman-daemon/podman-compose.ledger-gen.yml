@@ -5,17 +5,18 @@ services:
       - ~/github/mina:/app/:rw
     environment:
       - GENESIS_TIMESTAMP=${GENESIS_TIMESTAMP}
+      - MINA_PRIVKEY_PASS=${MINA_PRIVKEY_PASS}
     entrypoint:
       - /usr/bin/env
       - bash
       - -c
       - |
         chmod +x /app/scripts/generate-ledger-hf-dryrun.sh
-        /app/scripts/generate-ledger-hf-dryrun.sh -p 30 \
-                                                  -k 20 \
+        /app/scripts/generate-ledger-hf-dryrun.sh -p 20 \
+                                                  -k 50 \
                                                   -e 0 \
                                                   -b 10000 \
-                                                  --plain-balance 10000 \
+                                                  --plain-balance 1000000 \
                                                   --mina-binary $(which mina) \
                                                   --runtime-genesis-ledger-binary $(which mina-create-genesis) \
                                                   --output-dir /output \
