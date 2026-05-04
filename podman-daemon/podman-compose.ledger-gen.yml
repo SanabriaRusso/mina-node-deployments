@@ -12,11 +12,12 @@ services:
       - -c
       - |
         chmod +x /app/scripts/generate-ledger-hf-dryrun.sh
-        /app/scripts/generate-ledger-hf-dryrun.sh -p 20 \
-                                                  -k 50 \
+        /app/scripts/generate-ledger-hf-dryrun.sh -p 5 \
+                                                  -k 100 \
                                                   -e 0 \
-                                                  -b 10000 \
+                                                  -b 100000 \
                                                   --plain-balance 1000000 \
+                                                  --per-key-password \
                                                   --mina-binary $(which mina) \
                                                   --runtime-genesis-ledger-binary $(which mina-create-genesis) \
                                                   --output-dir /output \
